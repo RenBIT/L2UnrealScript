@@ -60,6 +60,9 @@ function OnLoad() {
 	ItemSlotHorizontal = GetItemWindowHandle( "BIT_AcpWnd.AcpSlotHorizontalWnd.ItemSlotHorizontal" );
 	ItemSlotVertical = GetItemWindowHandle( "BIT_AcpWnd.AcpSlotVerticalWnd.ItemSlotVertical" );
 
+//Почистим ID = -1 что не всплывала пустая подсказка! 	
+ClearItemID( EmptyItemInfo.ID ); 
+
 //Создадим ячейки для панели ACP
  for ( i = 0; i < MaxSlot; i++) {
 	ItemSlotHorizontal.AddItem(EmptyItemInfo);
