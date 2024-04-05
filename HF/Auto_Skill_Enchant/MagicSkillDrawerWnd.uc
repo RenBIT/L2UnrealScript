@@ -467,8 +467,11 @@ function OnTimer( int TimerID ) {
  local SkillInfo skill;
 
  if( TimerID == TIMER_SKILL_ID ){
+
+
+
 	GetSkillInfo( curWantedSkillID, curWantedLevel, skill);
- if(!IsShowWindow("MagicSkillWnd") || !IsShowWindow("MagicSkillDrawerWnd") || !AutoSkillEnchantCheck.IsChecked() ||int(skill.EnchantName) >= 30 || int(skill.EnchantName) >= int(AutoEditCount.GetString())+1  ){//Если окно скилов заурыто выключим таймер
+ if(!IsShowWindow("MagicSkillWnd") || !IsShowWindow("MagicSkillDrawerWnd") || !AutoSkillEnchantCheck.IsChecked() || int(skill.EnchantName) >= int(AutoEditCount.GetString())+1 || enableTrain == 0 && enableUnTrain == 1 ){//Если окно скилов заурыто выключим таймер
 	OFFAutoEnchat();//!Выключить автозаточку скилла
 	return;
 	}
@@ -477,10 +480,12 @@ function OnTimer( int TimerID ) {
 	OnResearchRoot_1Click(rootID_Auto);
 	}else{
 	RequestExEnchantSkill(EnchantState, curWantedSkillID, curWantedLevel);
+
 	}
        //   AddSystemMessageString(skill.SkillName@skill.EnchantName); //!string Вывыод системных сообщений в чат
-	}
 
+
+	}
 	}
 
 
@@ -749,6 +754,7 @@ function OnEvent(int Event_ID, String param)
  break;
 	case EV_SkillEnchantInfoWndAddSkill:
 	OnEVSkillEnchantInfoWndAddSkill(param);
+
  break;
 // 	case EV_SkillEnchantInfoWndHide:
 // 	OnEVSkillEnchantInfoWndHide(param);
@@ -990,7 +996,7 @@ function OnEVSkillEnchantInfoWndAddSkill(string param)
 	SucessProbablity.Hidewindow();
 
 	ResearchGuideDesc.SetText(GetSystemString(2046)); //"ѕрЖ®·№АО ЗП°нАЪ ЗПґВ ёс·ПАЗ ѕрЖ®·№АО №цЖ°А» ј±ЕГЗШ БЦјјїд."
-
+      //  AddSystemMessageString("index"); //!string Вывыод системных сообщений в чат
 	}
 	
 	// ЅєЕі АОГ¦ ЗС№шµµ ѕИµИ єОєР
@@ -1007,7 +1013,7 @@ function OnEVSkillEnchantInfoWndAddSkill(string param)
 	SetAdenaSpInfo();
 
 	ResearchGuideDesc.SetText(GetSystemString(2047)); //"ї¬±ё ЗП°нАЪ ЗПґВ ЅєЕіА» ї¬±ё ёс·ПїЎј­ ј±ЕГЗШ БЦјјїд."
-	
+
 	}
  else if ( enableTrain == 1 && enableUnTrain == 1)
 	{
@@ -1036,7 +1042,7 @@ function OnEVSkillEnchantInfoWndAddSkill(string param)
 
 	btnResearch.EnableWindow();
 	SafeEnchant.EnableWindow();
-	
+
 	
 	}
 	ResearchRoot_2[index].ShowWindow();
@@ -1094,7 +1100,7 @@ function OnEVSkillEnchantResult(string param)
 
 	ResearchGuideDesc.SetText(GetSystemString(2054)$"\\n"$GetSystemString(2055)); //"ЅєЕі АОГ¦Ж®їЎ јє°шЗПїґЅАґПґЩ.\n-АОГ¦Ж® ЅєЕіАЗ LvАМ »уЅВ ЗПїґЅАґПґЩ."
 
-
+    //  AddSystemMessageString("success 1"); //string Вывыод системных сообщений в чат
 	}
  else
 	{
@@ -1107,6 +1113,8 @@ function OnEVSkillEnchantResult(string param)
 	Playsound("ItemSound3.enchant_fail");
 
 	ResearchGuideDesc.SetText(GetSystemString(2062)$"\\n"$GetSystemString(2063)); //"ЅєЕі АОГ¦Ж®їЎ ЅЗЖРЗПїґЅАґПґЩ.\n-АОГ¦Ж® ЅєЕіАМ їАё®БціО ЅєЕі·О ГК±вИ­ µЛґПґЩ.."
+
+    //     AddSystemMessageString("no success 1"); //string Вывыод системных сообщений в чат
 
 	}
 	
@@ -1159,6 +1167,7 @@ function OnEVSkillEnchantInfoWndAddExtendInfo(string param)
 	{
 	adenaID = 1;
 	haguinID = itemclassid[0];
+
 	}
 	
 	ParseString(Param, "strSkillIconName",strSkillIconName);
@@ -1214,7 +1223,7 @@ function SetCurSkillInfo (ItemInfo info)
 	ResearchSkillIcon.AddItem( info );
 
 	SetAdenaSpInfo();
-	
+
 
 	}
  else if ( info.Level > 100)
@@ -1233,7 +1242,6 @@ function SetCurSkillInfo (ItemInfo info)
 	ResearchSkillIcon.AddItem( info );
 
 	SetAdenaSpInfo();
-	
 	}
 	}
 
@@ -1253,7 +1261,7 @@ function SetAfterSkillInfo (int EnchantState, int SkillID, int Level, string str
 	Info.Name = strSkillName;
 
 	GetSkillInfo(SkillID, Level, skillInfo);
-	
+
 	
 	//i = GetSystemString(88)@skillInfo.EnchantSkillLevel;	// АОГ¦Ж® ЅєЕіАЗ їАё®БціО ЅєЕіАЗ LvА» ЗҐЗц
 	//j = GetSystemString(88)@skillInfo.SkillLevel;			// їАё®БціО ЅєЕіАЗ LvА» ЗҐЗц
@@ -1405,38 +1413,69 @@ function SetEnchantConsumeInfo (int haguinClassID, int codexNum, string adenaIco
   	Info_c.Name = "SP";
 	//SetEnchantConsumeInfo ( strItemIconName[0], strItemName[0],  ItemNum[0],  strItemIconName[1],  strItemName[1],  ItemNum[1], SPConsume, Percent, EnchantState);
 
+   if (SPConsume > GetuserSP() || adenaNum > GetAdena()){//!если недостаточно SP или адены
+  //	AddSystemMessageString("Кончалось SP"@GetuserSP()@SPConsume);
+  	OFFAutoEnchat();//!Выключить автозаточку скилла
+  	}
+	
+ if ( EnchantState == ENCHANT_NORMAL )
+	{
   	
-   if ( EnchantState == ENCHANT_NORMAL )
+			//єсАьј­ ѕЖАМЕЫ ЗҐЅГ
+  	EnchantMaterialName[0].SetText(info_a.Name);
+  	EnchantMaterialInfo[0].SetText(GetSystemString(1514)@string(codexNum));
+  	EnchantMaterialIcon[0].Clear();
+  	EnchantMaterialIcon[0].Additem(info_a);
+
+  	
+			//ѕЖµҐіЄ ЗҐЅГ
+  	EnchantMaterialName[2].SetText(GetSystemString(2033)@adenaName);
+  	EnchantMaterialInfo[2].SetText(MakeCostString(string(adenaNum)));
+  	EnchantMaterialIcon[2].Clear();
+  	EnchantMaterialIcon[2].Additem(Info_b);
+  	
+
+			//SP ЗҐЅГ
+  	EnchantMaterialName[1].SetText(GetSystemString(365));
+  	EnchantMaterialInfo[1].SetText(MakeCostString(string(SPConsume)));
+  	EnchantMaterialIcon[1].Additem(info_c);
+
+			//јє°шИ®·ь ЗҐЅГ
+  	SucessProbablity.ShowWindow();
+  	SucessProbablity.SetText("");
+  	SucessProbablity.SetText(GetSystemString(642)@string(Percent)@GetSystemString(2042));
+
+  	SetAdenaSpInfo();
+  	
+
+  	} else if ( EnchantState == ENCHANT_SAFETY )
   	{
-    	
+
 			//єсАьј­ ѕЖАМЕЫ ЗҐЅГ
     	EnchantMaterialName[0].SetText(info_a.Name);
     	EnchantMaterialInfo[0].SetText(GetSystemString(1514)@string(codexNum));
     	EnchantMaterialIcon[0].Clear();
     	EnchantMaterialIcon[0].Additem(info_a);
 
-    	
-			//ѕЖµҐіЄ ЗҐЅГ
-    	EnchantMaterialName[2].SetText(GetSystemString(2033)@adenaName);
-    	EnchantMaterialInfo[2].SetText(MakeCostString(string(adenaNum)));
-    	EnchantMaterialIcon[2].Clear();
-    	EnchantMaterialIcon[2].Additem(Info_b);
-    	
-
 			//SP ЗҐЅГ
     	EnchantMaterialName[1].SetText(GetSystemString(365));
     	EnchantMaterialInfo[1].SetText(MakeCostString(string(SPConsume)));
-    	EnchantMaterialIcon[1].Additem(info_c);
+    	EnchantMaterialIcon[1].Additem(Info_c);
+			//ѕЖµҐіЄ ЗҐЅГ
+    	EnchantMaterialName[2].SetText(GetSystemstring(2033)@adenaName);
+    	EnchantMaterialInfo[2].SetText(MakeCostString(string(adenaNum)));
+    	EnchantMaterialIcon[2].Clear();
+    	EnchantMaterialIcon[2].Additem(Info_b);
 
 			//јє°шИ®·ь ЗҐЅГ
     	SucessProbablity.ShowWindow();
     	SucessProbablity.SetText("");
-    	SucessProbablity.SetText(GetSystemString(642)@string(Percent)@GetSystemString(2042));
+    	SucessProbablity.SetText(GetSystemString(642)@string(Percent)@GetSystemString(2042) );
 
     	SetAdenaSpInfo();
     	
 
-    	} else if ( EnchantState == ENCHANT_SAFETY )
+    	} else if ( EnchantState == ENCHANT_UNTRAIN)
     	{
 
 			//єсАьј­ ѕЖАМЕЫ ЗҐЅГ
@@ -1446,9 +1485,10 @@ function SetEnchantConsumeInfo (int haguinClassID, int codexNum, string adenaIco
       	EnchantMaterialIcon[0].Additem(info_a);
 
 			//SP ЗҐЅГ
-      	EnchantMaterialName[1].SetText(GetSystemString(365));
+      	EnchantMaterialName[1].SetText(GetSystemString(1578));
       	EnchantMaterialInfo[1].SetText(MakeCostString(string(SPConsume)));
       	EnchantMaterialIcon[1].Additem(Info_c);
+      	
 			//ѕЖµҐіЄ ЗҐЅГ
       	EnchantMaterialName[2].SetText(GetSystemstring(2033)@adenaName);
       	EnchantMaterialInfo[2].SetText(MakeCostString(string(adenaNum)));
@@ -1458,143 +1498,115 @@ function SetEnchantConsumeInfo (int haguinClassID, int codexNum, string adenaIco
 			//јє°шИ®·ь ЗҐЅГ
       	SucessProbablity.ShowWindow();
       	SucessProbablity.SetText("");
-      	SucessProbablity.SetText(GetSystemString(642)@string(Percent)@GetSystemString(2042) );
+      	SucessProbablity.SetText(GetSystemString(1577)@GetSystemString(1508)$GetSystemString(1510)@GetSystemString(2042));
 
       	SetAdenaSpInfo();
       	
 
-      	} else if ( EnchantState == ENCHANT_UNTRAIN)
+      	}else if ( EnchantState == ENCHANT_ROOT_CHANGE)
       	{
-
-			//єсАьј­ ѕЖАМЕЫ ЗҐЅГ
-        	EnchantMaterialName[0].SetText(info_a.Name);
-        	EnchantMaterialInfo[0].SetText(GetSystemString(1514)@string(codexNum));
-        	EnchantMaterialIcon[0].Clear();
-        	EnchantMaterialIcon[0].Additem(info_a);
-
-			//SP ЗҐЅГ
-        	EnchantMaterialName[1].SetText(GetSystemString(1578));
-        	EnchantMaterialInfo[1].SetText(MakeCostString(string(SPConsume)));
-        	EnchantMaterialIcon[1].Additem(Info_c);
-        	
-			//ѕЖµҐіЄ ЗҐЅГ
-        	EnchantMaterialName[2].SetText(GetSystemstring(2033)@adenaName);
-        	EnchantMaterialInfo[2].SetText(MakeCostString(string(adenaNum)));
-        	EnchantMaterialIcon[2].Clear();
-        	EnchantMaterialIcon[2].Additem(Info_b);
-
-			//јє°шИ®·ь ЗҐЅГ
-        	SucessProbablity.ShowWindow();
-        	SucessProbablity.SetText("");
-        	SucessProbablity.SetText(GetSystemString(1577)@GetSystemString(1508)$GetSystemString(1510)@GetSystemString(2042));
-
-        	SetAdenaSpInfo();
-        	
-
-        	}else if ( EnchantState == ENCHANT_ROOT_CHANGE)
+         if (curLevel == curWantedLevel )
         	{
-           if (curLevel == curWantedLevel )
+           for (i = 0; i < ENCHANT_MATERIAL_NUM; i++)
           	{
-             for (i = 0; i < ENCHANT_MATERIAL_NUM; i++)
-            	{
-              	EnchantMaterialName[i].SetText("");
-              	EnchantMaterialInfo[i].SetText("");
-              	EnchantMaterialIcon[i].clear();
-              	}
+            	EnchantMaterialName[i].SetText("");
+            	EnchantMaterialInfo[i].SetText("");
+            	EnchantMaterialIcon[i].clear();
+            	}
 
-            	} else
-          	{
+          	} else
+        	{
 
 			//єсАьј­ ѕЖАМЕЫ ЗҐЅГ
-            	EnchantMaterialName[0].SetText(info_a.Name);
-            	EnchantMaterialInfo[0].SetText(GetSystemString(1514)@string(codexNum));
-            	EnchantMaterialIcon[0].Clear();
-            	EnchantMaterialIcon[0].Additem(info_a);
+          	EnchantMaterialName[0].SetText(info_a.Name);
+          	EnchantMaterialInfo[0].SetText(GetSystemString(1514)@string(codexNum));
+          	EnchantMaterialIcon[0].Clear();
+          	EnchantMaterialIcon[0].Additem(info_a);
 
 			//SP ЗҐЅГ
-            	EnchantMaterialName[1].SetText(GetSystemString(365));
-            	EnchantMaterialInfo[1].SetText(MakeCostString(string(SPConsume)));
-            	EnchantMaterialIcon[1].Additem(Info_c);
+          	EnchantMaterialName[1].SetText(GetSystemString(365));
+          	EnchantMaterialInfo[1].SetText(MakeCostString(string(SPConsume)));
+          	EnchantMaterialIcon[1].Additem(Info_c);
 
 			//ѕЖµҐіЄ ЗҐЅГ
-            	EnchantMaterialName[2].SetText(GetSystemstring(2033)@adenaName);
-            	EnchantMaterialInfo[2].SetText(MakeCostString(string(adenaNum)));
-            	EnchantMaterialIcon[2].Clear();
-            	EnchantMaterialIcon[2].Additem(Info_b);
+          	EnchantMaterialName[2].SetText(GetSystemstring(2033)@adenaName);
+          	EnchantMaterialInfo[2].SetText(MakeCostString(string(adenaNum)));
+          	EnchantMaterialIcon[2].Clear();
+          	EnchantMaterialIcon[2].Additem(Info_b);
 
-            	SucessProbablity.SetText("");
-            	SucessProbablity.HideWindow();
+          	SucessProbablity.SetText("");
+          	SucessProbablity.HideWindow();
 
+          	SetAdenaSpInfo();
+          	}
+        	
+        	}
+      	}
+
+
+    function int GetuserSP()
+    	{
+
+       local UserInfo infoPlayer;
+       local int iPlayerSP;
+
+      	GetPlayerInfo(infoPlayer);
+      	iPlayerSP = infoPlayer.nSP;
+
+      	return iPlayerSP;
+      	}
+
+    function SetAdenaSpInfo()
+    	{
+      	txtMyAdena.SetText(MakeCostString( Int64ToString(GetAdena()) ));
+      	txtMyAdena.SetTooltipString( ConvertNumToText(Int64ToString(GetAdena())) );
+      	txtMySp.SetText(MakeCostString( string(GetUserSP()) ));
+      	txtMySp.SetTooltipString( ConvertNumToTextNoAdena(string(GetUserSP())) );
+      	txtMyAdenaStr.SetText(GetSystemString(469));
+      	}
+
+    function OnDropItem( String a_WindowID, ItemInfo a_ItemInfo, int X, int Y)
+    	{
+       local string dragsrcName;
+       local MagicSkillWnd script_a;
+
+      	OFFAutoEnchat();//!Выключить автозаточку скилла
+      	rootID_Auto = -1;//Чтобы не глючило изначально выбраная заточка
+
+      	script_a = MagicSkillWnd(GetScript("MagicSkillWnd"));
+      	
+      	RequestSkillList();
+      	dragsrcName = Left(a_ItemInfo.DragSrcName,10);
+
+       switch (a_WindowID)
+      	{
+        	case "ResearchSkillIcon":
+         if ((dragsrcName== "PSkillItem" || dragsrcName == "ASkillItem") )
+        	{
+          	
+           if (a_ItemInfo.bDisabled)
+          	{
+            	SkillInfoClear();
+            	SetAdenaSpInfo();
+            	ResearchGuideDesc.SetText(GetSystemString(2041));
+            	AddSystemMessage(3070);
+            	}
+           else
+          	{
+            	SkillInfoClear();
+            	RequestExEnchantSkillInfo(a_ItemInfo.ID.ClassID, a_ItemInfo.Level);
+            	SetCurSkillInfo(a_ItemInfo);
             	SetAdenaSpInfo();
             	}
-          	
-          	}
-        	}
-
-
-      function int GetuserSP()
-      	{
-
-         local UserInfo infoPlayer;
-         local int iPlayerSP;
-
-        	GetPlayerInfo(infoPlayer);
-        	iPlayerSP = infoPlayer.nSP;
-
-        	return iPlayerSP;
-        	}
-
-      function SetAdenaSpInfo()
-      	{
-        	txtMyAdena.SetText(MakeCostString( Int64ToString(GetAdena()) ));
-        	txtMyAdena.SetTooltipString( ConvertNumToText(Int64ToString(GetAdena())) );
-        	txtMySp.SetText(MakeCostString( string(GetUserSP()) ));
-        	txtMySp.SetTooltipString( ConvertNumToTextNoAdena(string(GetUserSP())) );
-        	txtMyAdenaStr.SetText(GetSystemString(469));
-        	}
-
-      function OnDropItem( String a_WindowID, ItemInfo a_ItemInfo, int X, int Y)
-      	{
-         local string dragsrcName;
-         local MagicSkillWnd script_a;
-
-        	OFFAutoEnchat();//!Выключить автозаточку скилла
-        	rootID_Auto = -1;//Чтобы не глючило изначально выбраная заточка
-
-        	script_a = MagicSkillWnd(GetScript("MagicSkillWnd"));
-        	
-        	RequestSkillList();
-        	dragsrcName = Left(a_ItemInfo.DragSrcName,10);
-
-         switch (a_WindowID)
-        	{
-          	case "ResearchSkillIcon":
-           if ((dragsrcName== "PSkillItem" || dragsrcName == "ASkillItem") )
-          	{
-            	
-             if (a_ItemInfo.bDisabled)
-            	{
-              	SkillInfoClear();
-              	SetAdenaSpInfo();
-              	ResearchGuideDesc.SetText(GetSystemString(2041));
-              	AddSystemMessage(3070);
-              	}
-             else
-            	{
-              	SkillInfoClear();
-              	RequestExEnchantSkillInfo(a_ItemInfo.ID.ClassID, a_ItemInfo.Level);
-              	SetCurSkillInfo(a_ItemInfo);
-              	SetAdenaSpInfo();
-              	}
-
-            	}
-           break;
 
           	}
+         break;
+
         	}
+      	}
 
 
-      	defaultproperties
-      	{
-        	m_WindowName="MagicSkillDrawerWnd"
-        	}
+    	defaultproperties
+    	{
+      	m_WindowName="MagicSkillDrawerWnd"
+      	}
