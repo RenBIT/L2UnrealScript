@@ -144,6 +144,7 @@ function SkillSize(){
 	Me.SetWindowSize(w,36);
 	}
 
+//Вывод прогресс бара с выброным цветом текстуры
 function SetProgressTexture(string ColorIcon) {
  local string UTXPath;
 
