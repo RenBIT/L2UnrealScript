@@ -64,6 +64,7 @@ function OnTimer(int TimerID) {
 	}
 	}
 
+//Основная функция оброботки данных скилла
 function HandleReceiveMagicSkillUse(string a_Param) {
  local int AttackerID;
  local int DefenderID;
