@@ -17,7 +17,7 @@ struct HSVColor {var float H, S, V, A;};
 const TIMER_SKILL_ID = 15512;
 const TIMER_SKILL_TIME = 500;
 
-const COLOR_NAME = "_BLACK,_BLUE,_BROWN,_CYAN,_GREEN,_ORANGE,_PINK,_PURPLE,_RED,_YELLOW"; //const с ID цветами окончание имени скилла в utx
+const COLOR_NAME = "_BLACK,_BLUE,_BROWN,_CYAN,_GREEN,_ORANGE,_PINK,_PURPLE,_RED,_YELLOW"; //const с ID цветами окончание имени скилла в utx, пример : "InkedSkills.Skill0001_BLACK"
 
  var array<string> ColorNameSkill;
 
